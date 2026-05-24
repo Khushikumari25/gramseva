@@ -1,4 +1,5 @@
 # GramSeva - One Village At A Time
+**DEployed Link - https://gramseva-mdwk.onrender.com**
 
 AI-powered rural ecosystem web application for farmers, villagers, women entrepreneurs, and rural communities.
 
