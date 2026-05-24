@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - GramSeva</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--green:#22c55e;--green-dark:#16a34a;--green-light:#bbf7d0;--bg:#0a0f0a;--bg2:#0f1a0f;--card:#111c11;--border:rgba(34,197,94,0.18);--text:#f0fdf4;--muted:#86efac}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:stretch;overflow-x:hidden}
+    .auth-left{flex:1;background:linear-gradient(135deg,#052e16 0%,#064e3b 50%,#14532d 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 40px;position:relative;overflow:hidden}
+    .auth-left::before{content:'';position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800');background-size:cover;opacity:0.2}
+    .auth-left-content{position:relative;z-index:1;text-align:center}
+    .auth-left h1{font-size:2rem;font-weight:700;color:#fff;margin-bottom:12px}
+    .auth-left h1 span{color:var(--green)}
+    .auth-left p{color:rgba(255,255,255,0.65);font-size:1rem;line-height:1.7;max-width:340px;margin:0 auto 40px}
+    .auth-features{display:flex;flex-direction:column;gap:14px;text-align:left}
+    .auth-feature{display:flex;align-items:center;gap:12px;background:rgba(34,197,94,0.08);border:1px solid var(--border);border-radius:12px;padding:14px 18px;font-size:0.88rem;color:rgba(255,255,255,0.85)}
+    .auth-right{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px;background:var(--bg)}
+    .auth-card{width:100%;max-width:440px}
+    .auth-card h2{font-size:1.75rem;font-weight:700;margin-bottom:6px}
+    .auth-card .subtitle{color:var(--muted);font-size:0.92rem;margin-bottom:28px}
+    .lang-toggle{display:flex;gap:8px;margin-bottom:24px}
+    .lang-btn{padding:6px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:0.82rem;cursor:pointer;font-family:inherit;transition:all 0.2s}
+    .lang-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
+    .form-group{margin-bottom:18px}
+    .form-group label{display:block;font-size:0.84rem;font-weight:500;color:var(--muted);margin-bottom:7px}
+    .form-group input,.form-group select{width:100%;padding:13px 14px 13px 42px;background:var(--card);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:0.95rem;font-family:inherit;outline:none;transition:border-color 0.2s}
+    .form-group select{padding-left:14px}
+    .form-group input:focus,.form-group select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,0.12)}
+    .form-group input::placeholder{color:rgba(134,239,172,0.4)}
+    .input-wrap{position:relative}
+    .input-wrap .icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:0.9rem;pointer-events:none}
+    .btn-auth{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity 0.2s;margin-top:8px}
+    .btn-auth:hover{opacity:0.92}
+    .btn-auth:disabled{opacity:0.5;cursor:not-allowed}
+    .error-msg{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:8px;padding:12px 14px;font-size:0.88rem;color:#fca5a5;margin-bottom:16px;display:none}
+    .success-msg{background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);border-radius:8px;padding:12px 14px;font-size:0.88rem;color:var(--green-light);margin-bottom:16px;display:none}
+    .auth-footer{text-align:center;margin-top:28px;font-size:0.88rem;color:var(--muted)}
+    .auth-footer .switch-btn{background:none;border:none;color:var(--green);font-weight:600;cursor:pointer;font-family:inherit;font-size:inherit;padding:0;text-decoration:none}
+    .auth-footer .switch-btn:hover{text-decoration:underline}
+    .tabs{display:flex;gap:0;margin-bottom:24px;background:var(--card);border-radius:10px;padding:4px;border:1px solid var(--border)}
+    .tab-btn{flex:1;padding:10px;text-align:center;border-radius:8px;border:none;background:transparent;color:var(--muted);font-family:inherit;font-size:0.88rem;font-weight:500;cursor:pointer;transition:all 0.2s}
+    .tab-btn.active{background:var(--green);color:#fff;font-weight:600}
+    .back-link{position:fixed;top:20px;left:20px;display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-size:0.85rem;background:rgba(0,0,0,0.4);padding:8px 14px;border-radius:20px;border:1px solid var(--border);z-index:100}
+    .back-link:hover{color:var(--green)}
+    .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .hidden{display:none!important}
+    @media(max-width:768px){body{flex-direction:column}.auth-left{display:none}.auth-right{padding:40px 20px}}
+  </style>
+</head>
+<body>
+  <a href="/" class="back-link">&#8592; Back to Home</a>
+
+  <!-- Left Panel -->
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <img src="/assets/images/logo.png" alt="GramSeva" style="width:100px;height:100px;margin:0 auto 20px;border-radius:50%;object-fit:contain;background:#fff;padding:8px;">
+      <h1>Welcome to <span>GramSeva</span></h1>
+      <p>AI-powered rural ecosystem platform for farmers, villagers, and rural communities.</p>
+      <div class="auth-features">
+        <div class="auth-feature"><span>📍</span><span>200+ Government schemes at your fingertips</span></div>
+        <div class="auth-feature"><span>🚜</span><span>Rent tractors, harvesters & farming equipment</span></div>
+        <div class="auth-feature"><span>🎙</span><span>AI assistant in Hindi, Bhojpuri, Punjabi</span></div>
+        <div class="auth-feature"><span>🌾</span><span>Crop disease detection with AI</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2 id="form-title">Welcome back</h2>
+      <p class="subtitle" id="form-subtitle">Login to your GramSeva account</p>
+
+      <div class="lang-toggle">
+        <button type="button" class="lang-btn active" id="lang-en">English</button>
+        <button type="button" class="lang-btn" id="lang-hi">हिंदी</button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button type="button" class="tab-btn active" id="tab-login">Login</button>
+        <button type="button" class="tab-btn" id="tab-register">Sign Up</button>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+      <div class="success-msg" id="successMsg"></div>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Email or Phone</label>
+          <div class="input-wrap">
+            <span class="icon">@</span>
+            <input type="text" id="loginEmail" placeholder="Enter email or phone" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="icon">&#9679;</span>
+            <input type="password" id="loginPass" placeholder="Enter password" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-auth" id="loginBtn">Login to Account</button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="hidden">
+        <div class="form-group">
+          <label>Full Name</label>
+          <div class="input-wrap">
+            <span class="icon">&#9786;</span>
+            <input type="text" id="regName" placeholder="Your full name" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <div class="input-wrap">
+            <span class="icon">@</span>
+            <input type="email" id="regEmail" placeholder="your@email.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Phone (optional)</label>
+          <div class="input-wrap">
+            <span class="icon">#</span>
+            <input type="tel" id="regPhone" placeholder="10-digit mobile">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="icon">&#9679;</span>
+            <input type="password" id="regPass" placeholder="Min 6 characters" required minlength="6">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select id="regRole">
+            <option value="farmer">Farmer</option>
+            <option value="seller">Seller</option>
+            <option value="equipment_owner">Equipment Owner</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <select id="regState">
+            <option value="Bihar">Bihar</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Jharkhand">Jharkhand</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-auth" id="regBtn">Create Account</button>
+      </form>
+
+      <div class="auth-footer">
+        <span id="footer-text">Don't have an account?</span>
+        <button type="button" class="switch-btn" id="footer-switch">Sign up free</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      var API = '/api';
+      var currentTab = 'login';
+
+      // --- DOM Elements ---
+      var loginForm = document.getElementById('loginForm');
+      var registerForm = document.getElementById('registerForm');
+      var tabLogin = document.getElementById('tab-login');
+      var tabRegister = document.getElementById('tab-register');
+      var footerSwitch = document.getElementById('footer-switch');
+      var footerText = document.getElementById('footer-text');
+      var formTitle = document.getElementById('form-title');
+      var formSubtitle = document.getElementById('form-subtitle');
+      var errorMsg = document.getElementById('errorMsg');
+      var successMsg = document.getElementById('successMsg');
+      var loginBtn = document.getElementById('loginBtn');
+      var regBtn = document.getElementById('regBtn');
+
+      // --- Check existing auth ---
+      var existingToken = localStorage.getItem('gramseva_token');
+      if (existingToken) {
+        fetch(API + '/auth/me', { headers: { 'Authorization': 'Bearer ' + existingToken } })
+          .then(function(r) { return r.json(); })
+          .then(function(d) {
+            if (d.success) {
+              window.location.href = '/pages/dashboard.html';
+            } else {
+              localStorage.removeItem('gramseva_token');
+              localStorage.removeItem('gramseva_user');
+            }
+          })
+          .catch(function() {
+            localStorage.removeItem('gramseva_token');
+            localStorage.removeItem('gramseva_user');
+          });
+      }
+
+      // --- Tab Switching ---
+      function switchTab(tab) {
+        currentTab = tab;
+        if (tab === 'login') {
+          loginForm.classList.remove('hidden');
+          registerForm.classList.add('hidden');
+          tabLogin.classList.add('active');
+          tabRegister.classList.remove('active');
+          formTitle.textContent = 'Welcome back';
+          formSubtitle.textContent = 'Login to your GramSeva account';
+          footerText.textContent = "Don't have an account?";
+          footerSwitch.textContent = 'Sign up free';
+        } else {
+          loginForm.classList.add('hidden');
+          registerForm.classList.remove('hidden');
+          tabLogin.classList.remove('active');
+          tabRegister.classList.add('active');
+          formTitle.textContent = 'Create Account';
+          formSubtitle.textContent = 'Join GramSeva for free';
+          footerText.textContent = 'Already have an account?';
+          footerSwitch.textContent = 'Login here';
+        }
+        // Clear messages
+        errorMsg.style.display = 'none';
+        successMsg.style.display = 'none';
+      }
+
+      tabLogin.addEventListener('click', function() { switchTab('login'); });
+      tabRegister.addEventListener('click', function() { switchTab('register'); });
+      footerSwitch.addEventListener('click', function() {
+        switchTab(currentTab === 'login' ? 'register' : 'login');
+      });
+
+      // --- Language buttons ---
+      document.getElementById('lang-en').addEventListener('click', function() {
+        document.getElementById('lang-en').classList.add('active');
+        document.getElementById('lang-hi').classList.remove('active');
+      });
+      document.getElementById('lang-hi').addEventListener('click', function() {
+        document.getElementById('lang-hi').classList.add('active');
+        document.getElementById('lang-en').classList.remove('active');
+      });
+
+      // --- Show Error/Success ---
+      function showError(msg) {
+        errorMsg.textContent = msg;
+        errorMsg.style.display = 'block';
+        successMsg.style.display = 'none';
+      }
+
+      function showSuccess(msg) {
+        successMsg.textContent = msg;
+        successMsg.style.display = 'block';
+        errorMsg.style.display = 'none';
+      }
+
+      // --- Login Handler ---
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var email = document.getElementById('loginEmail').value.trim();
+        var password = document.getElementById('loginPass').value.trim();
+
+        if (!email || !password) {
+          showError('Please fill all fields');
+          return;
+        }
+
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<span class="spinner"></span> Logging in...';
+
+        fetch(API + '/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, password: password })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data.success) {
+            localStorage.setItem('gramseva_token', data.token);
+            localStorage.setItem('gramseva_user', JSON.stringify(data.user));
+            showSuccess('Login successful! Redirecting...');
+            setTimeout(function() {
+              window.location.href = '/pages/dashboard.html';
+            }, 600);
+          } else {
+            showError(data.error || 'Login failed. Check your email and password.');
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login to Account';
+          }
+        })
+        .catch(function(err) {
+          showError('Connection error. Make sure the server is running on port 5000.');
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Login to Account';
+        });
+      });
+
+      // --- Register Handler ---
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var name = document.getElementById('regName').value.trim();
+        var email = document.getElementById('regEmail').value.trim();
+        var phone = document.getElementById('regPhone').value.trim();
+        var password = document.getElementById('regPass').value;
+        var role = document.getElementById('regRole').value;
+        var state = document.getElementById('regState').value;
+
+        if (!name || !email || !password) {
+          showError('Please fill required fields: Name, Email, Password');
+          return;
+        }
+        if (password.length < 6) {
+          showError('Password must be at least 6 characters');
+          return;
+        }
+
+        regBtn.disabled = true;
+        regBtn.innerHTML = '<span class="spinner"></span> Creating account...';
+
+        var body = { name: name, email: email, password: password, role: role, state: state };
+        if (phone) body.phone = phone;
+
+        fetch(API + '/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data.success) {
+            localStorage.setItem('gramseva_token', data.token);
+            localStorage.setItem('gramseva_user', JSON.stringify(data.user));
+            showSuccess('Account created! Redirecting to dashboard...');
+            setTimeout(function() {
+              window.location.href = '/pages/dashboard.html';
+            }, 600);
+          } else {
+            var errMsg = data.error || (data.errors && data.errors[0] && data.errors[0].msg) || 'Registration failed. Try a different email.';
+            showError(errMsg);
+            regBtn.disabled = false;
+            regBtn.textContent = 'Create Account';
+          }
+        })
+        .catch(function(err) {
+          showError('Connection error. Make sure the server is running on port 5000.');
+          regBtn.disabled = false;
+          regBtn.textContent = 'Create Account';
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kisan Mitra - GramSeva AI Chatbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{inter:['Inter','Noto Sans Devanagari','sans-serif'],poppins:['Poppins','Noto Sans Devanagari','sans-serif']}}}}</script>
+  <style>
+    .typing-dot { animation: bounce-dot 0.8s infinite; }
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes bounce-dot { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+    .voice-pulse { animation: vpulse 1.5s infinite; }
+    @keyframes vpulse { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.4)} 50%{box-shadow:0 0 0 12px rgba(220,38,38,0)} }
+    .msg-enter { animation: slideUp 0.25s ease; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  </style>
+</head>
+<body class="font-inter h-screen flex flex-col bg-gray-50 dark:bg-zinc-900 overflow-hidden">
+  <!-- Header -->
+  <nav class="bg-green-800 dark:bg-zinc-800 text-white px-4 py-3 flex items-center gap-3 flex-shrink-0 shadow-lg">
+    <a href="/" class="flex items-center gap-2">
+      <img src="/assets/images/logo.png" alt="GramSeva" class="w-8 h-8 rounded-full object-contain bg-white p-0.5">
+      <span class="font-poppins font-bold text-lg">GramSeva</span>
+    </a>
+    <div class="ml-4 flex-1">
+      <p class="font-semibold text-sm">Kisan Mitra AI</p>
+      <p class="text-xs text-green-200 flex items-center gap-1"><span class="w-2 h-2 bg-green-400 rounded-full inline-block"></span> Online</p>
+    </div>
+    <select id="cb-lang" class="text-xs bg-green-700 border border-green-600 rounded-lg px-2 py-1 text-white">
+      <option value="hi">हिन्दी</option>
+      <option value="en">English</option>
+      <option value="bho">भोजपुरी</option>
+      <option value="pa">ਪੰਜਾਬੀ</option>
+    </select>
+    <button id="cb-autospeak" class="text-xs bg-green-700 border border-green-600 rounded-lg px-3 py-1">Auto Speak: ON</button>
+  </nav>
+
+  <!-- Quick Questions Sidebar (mobile: horizontal scroll) -->
+  <div class="bg-white dark:bg-zinc-800 border-b dark:border-zinc-700 px-4 py-3 flex-shrink-0 overflow-x-auto">
+    <div class="flex gap-2 min-w-max">
+      <button onclick="sendQuickQ(0)" class="px-3 py-1.5 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-full text-xs font-medium text-green-800 dark:text-green-400 hover:bg-green-100 whitespace-nowrap" id="qq0"></button>
+      <button onclick="sendQuickQ(1)" class="px-3 py-1.5 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-full text-xs font-medium text-green-800 dark:text-green-400 hover:bg-green-100 whitespace-nowrap" id="qq1"></button>
+      <button onclick="sendQuickQ(2)" class="px-3 py-1.5 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-full text-xs font-medium text-green-800 dark:text-green-400 hover:bg-green-100 whitespace-nowrap" id="qq2"></button>
+      <button onclick="sendQuickQ(3)" class="px-3 py-1.5 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-full text-xs font-medium text-green-800 dark:text-green-400 hover:bg-green-100 whitespace-nowrap" id="qq3"></button>
+      <button onclick="sendQuickQ(4)" class="px-3 py-1.5 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-full text-xs font-medium text-green-800 dark:text-green-400 hover:bg-green-100 whitespace-nowrap" id="qq4"></button>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div id="cb-messages" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+
+  <!-- Voice Listening Bar -->
+  <div id="cb-voice-bar" class="hidden bg-red-600 text-white text-center py-2 text-sm font-medium flex-shrink-0">Listening... / सुन रहा हूँ...</div>
+
+  <!-- Input Area -->
+  <div class="bg-white dark:bg-zinc-800 border-t dark:border-zinc-700 p-3 flex-shrink-0">
+    <div class="flex gap-2 items-end max-w-4xl mx-auto">
+      <div class="flex-1 border dark:border-zinc-600 rounded-2xl px-4 py-2.5 bg-gray-50 dark:bg-zinc-700 focus-within:ring-2 focus-within:ring-green-500 focus-within:border-green-500">
+        <textarea id="cb-input" rows="1" class="w-full bg-transparent outline-none text-sm resize-none max-h-24 leading-relaxed" placeholder="Type your question..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();cbSend()}" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+      </div>
+      <button id="cb-mic-btn" onclick="cbToggleMic()" class="w-11 h-11 rounded-full bg-green-700 text-white flex items-center justify-center hover:bg-green-800 transition-colors flex-shrink-0">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+      </button>
+      <button onclick="cbSend()" class="w-11 h-11 rounded-full bg-amber-500 text-green-900 flex items-center justify-center hover:bg-amber-400 transition-colors flex-shrink-0 font-bold">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Config - Uses GramSeva backend AI or Groq fallback
+    const API = '/api';
+    const token = localStorage.getItem('gramseva_token');
+    let cbLang = localStorage.getItem('gramseva_lang') || 'hi';
+    let cbAutoSpeak = true;
+    let cbMicActive = false;
+    let cbRecog = null;
+
+    const QUICK_Q = {
+      hi: { labels: ['गेहूं उपकरण','ट्रैक्टर किराया','सरकारी योजना','फसल रोग','मौसम जानकारी'], texts: ['गेहूं की फसल के लिए कौनसा उपकरण चाहिए?','ट्रैक्टर का किराया कितना है?','किसानों के लिए कौन सी सरकारी योजनाएं हैं?','मेरी फसल में रोग लगा है, क्या करूं?','आज मौसम कैसा रहेगा?'] },
+      en: { labels: ['Wheat equipment','Tractor rent','Govt schemes','Crop disease','Weather info'], texts: ['What equipment do I need for wheat crop?','How much does tractor rental cost?','What government schemes are available for farmers?','My crop has a disease, what should I do?','How is the weather today?'] },
+      bho: { labels: ['गेहूं औजार','ट्रैक्टर किराया','सरकारी योजना','फसल रोग','मौसम'], texts: ['गेहूं के फसल खातिर कउन औजार चाहीं?','ट्रैक्टर के किराया कतना बा?','किसान खातिर कउन सरकारी योजना बा?','हमार फसल में रोग लागल बा, का करीं?','आज मौसम कइसन रही?'] },
+      pa: { labels: ['ਕਣਕ ਸਾਜ਼ੋ-ਸਾਮਾਨ','ਟਰੈਕਟਰ ਕਿਰਾਇਆ','ਸਰਕਾਰੀ ਯੋਜਨਾ','ਫਸਲ ਰੋਗ','ਮੌਸਮ'], texts: ['ਕਣਕ ਦੀ ਫਸਲ ਲਈ ਕਿਹੜਾ ਸਾਜ਼ੋ-ਸਾਮਾਨ ਚਾਹੀਦਾ?','ਟਰੈਕਟਰ ਦਾ ਕਿਰਾਇਆ ਕਿੰਨਾ ਹੈ?','ਕਿਸਾਨਾਂ ਲਈ ਕਿਹੜੀਆਂ ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ ਹਨ?','ਮੇਰੀ ਫਸਲ ਵਿੱਚ ਰੋਗ ਲੱਗਿਆ ਹੈ, ਕੀ ਕਰਾਂ?','ਅੱਜ ਮੌਸਮ ਕਿਵੇਂ ਰਹੇਗਾ?'] }
+    };
+
+    const WELCOME = {
+      hi: 'नमस्ते! मैं किसान मित्र हूँ, आपका GramSeva AI सहायक। खेती, उपकरण, सरकारी योजनाओं, मौसम - किसी भी सवाल में मदद कर सकता हूँ। पूछिए!',
+      en: 'Hello! I am Kisan Mitra, your GramSeva AI assistant. I can help with farming, equipment, government schemes, weather - ask me anything!',
+      bho: 'प्रणाम! हम किसान मित्र हईं, रउआ GramSeva AI सहायक। खेती, औजार, सरकारी योजना, मौसम - कउनो सवाल में मदद करब। पूछीं!',
+      pa: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ ਕਿਸਾਨ ਮਿੱਤਰ ਹਾਂ, ਤੁਹਾਡਾ GramSeva AI ਸਹਾਇਕ। ਖੇਤੀ, ਸਾਜ਼ੋ-ਸਾਮਾਨ, ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ - ਕੁਝ ਵੀ ਪੁੱਛੋ!'
+    };
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('cb-lang').value = cbLang;
+      updateQuickQ();
+      addMsg(WELCOME[cbLang] || WELCOME.hi, 'bot', false);
+    });
+
+    document.getElementById('cb-lang').addEventListener('change', (e) => {
+      cbLang = e.target.value;
+      localStorage.setItem('gramseva_lang', cbLang);
+      updateQuickQ();
+    });
+
+    document.getElementById('cb-autospeak').addEventListener('click', () => {
+      cbAutoSpeak = !cbAutoSpeak;
+      document.getElementById('cb-autospeak').textContent = cbAutoSpeak ? 'Auto Speak: ON' : 'Auto Speak: OFF';
+      document.getElementById('cb-autospeak').classList.toggle('bg-green-700', cbAutoSpeak);
+      document.getElementById('cb-autospeak').classList.toggle('bg-zinc-600', !cbAutoSpeak);
+    });
+
+    function updateQuickQ() {
+      const q = QUICK_Q[cbLang] || QUICK_Q.hi;
+      q.labels.forEach((l, i) => { const el = document.getElementById('qq'+i); if(el) el.textContent = l; });
+    }
+
+    function sendQuickQ(i) {
+      const q = QUICK_Q[cbLang] || QUICK_Q.hi;
+      document.getElementById('cb-input').value = q.texts[i];
+      cbSend();
+    }
+
+    // Add message bubble
+    function addMsg(text, role, speak = true) {
+      const div = document.createElement('div');
+      div.className = `flex gap-3 msg-enter ${role === 'user' ? 'justify-end' : ''}`;
+      const time = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+      const safe = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+
+      if (role === 'bot') {
+        div.innerHTML = `
+          <div class="w-9 h-9 rounded-full bg-green-700 flex items-center justify-center flex-shrink-0 mt-1"><svg class="w-4 h-4 text-white" viewBox="0 0 32 32" fill="currentColor"><path d="M16 2C10 2 4 6 4 12c0 4 2 7 5 9l7 9 7-9c3-2 5-5 5-9 0-6-6-10-12-10z"/></svg></div>
+          <div class="max-w-[80%]">
+            <div class="bg-white dark:bg-zinc-800 border dark:border-zinc-700 rounded-2xl rounded-tl-sm px-4 py-3 text-sm leading-relaxed shadow-sm">${safe}</div>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs text-gray-400">${time}</span>
+              <button onclick="speakText(this,'${text.replace(/'/g,"\\'").replace(/\n/g,' ')}')" class="text-xs text-gray-400 hover:text-green-700">Listen</button>
+            </div>
+          </div>`;
+      } else {
+        div.innerHTML = `
+          <div class="max-w-[80%]">
+            <div class="bg-green-700 text-white rounded-2xl rounded-tr-sm px-4 py-3 text-sm leading-relaxed shadow-sm">${safe}</div>
+            <div class="text-xs text-gray-400 text-right mt-1">${time}</div>
+          </div>`;
+      }
+      document.getElementById('cb-messages').appendChild(div);
+      document.getElementById('cb-messages').scrollTop = document.getElementById('cb-messages').scrollHeight;
+
+      if (role === 'bot' && speak && cbAutoSpeak) {
+        speakTTS(text);
+      }
+    }
+
+    // Send message
+    async function cbSend() {
+      const inp = document.getElementById('cb-input');
+      const text = inp.value.trim();
+      if (!text) return;
+      inp.value = ''; inp.style.height = 'auto';
+      speechSynthesis.cancel();
+      addMsg(text, 'user', false);
+
+      // Show typing
+      const typing = document.createElement('div');
+      typing.id = 'cb-typing';
+      typing.className = 'flex gap-3 msg-enter';
+      typing.innerHTML = `<div class="w-9 h-9 rounded-full bg-green-700 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-white" viewBox="0 0 32 32" fill="currentColor"><path d="M16 2C10 2 4 6 4 12c0 4 2 7 5 9l7 9 7-9c3-2 5-5 5-9 0-6-6-10-12-10z"/></svg></div><div class="bg-white dark:bg-zinc-800 border dark:border-zinc-700 rounded-2xl rounded-tl-sm px-4 py-3 flex gap-1"><span class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></span><span class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></span><span class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></span></div>`;
+      document.getElementById('cb-messages').appendChild(typing);
+      document.getElementById('cb-messages').scrollTop = document.getElementById('cb-messages').scrollHeight;
+
+      try {
+        const res = await fetch(`${API}/ai/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}` },
+          body: JSON.stringify({ message: text, language: cbLang })
+        });
+        const data = await res.json();
+        document.getElementById('cb-typing')?.remove();
+        const reply = data.data?.reply || 'Sorry, could not process that.';
+        addMsg(reply, 'bot');
+      } catch (e) {
+        document.getElementById('cb-typing')?.remove();
+        addMsg('Connection error. Please check your internet.', 'bot', false);
+      }
+    }
+
+    // TTS
+    function speakTTS(text) {
+      if (!('speechSynthesis' in window)) return;
+      const clean = text.replace(/<[^>]+>/g,' ').replace(/[*#\-]/g,'').trim();
+      const u = new SpeechSynthesisUtterance(clean);
+      const langMap = { hi:'hi-IN', en:'en-IN', bho:'hi-IN', pa:'pa-IN' };
+      u.lang = langMap[cbLang] || 'hi-IN';
+      u.rate = 0.9;
+      speechSynthesis.speak(u);
+    }
+
+    function speakText(btn, text) {
+      if (speechSynthesis.speaking) { speechSynthesis.cancel(); btn.textContent = 'Listen'; return; }
+      btn.textContent = 'Stop';
+      const u = new SpeechSynthesisUtterance(text);
+      const langMap = { hi:'hi-IN', en:'en-IN', bho:'hi-IN', pa:'pa-IN' };
+      u.lang = langMap[cbLang] || 'hi-IN'; u.rate = 0.9;
+      u.onend = () => { btn.textContent = 'Listen'; };
+      speechSynthesis.speak(u);
+    }
+
+    // Voice Input
+    function cbToggleMic() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) { alert('Voice not supported. Use Chrome.'); return; }
+      if (cbMicActive) { cbRecog?.stop(); return; }
+      speechSynthesis.cancel();
+      cbRecog = new SR();
+      const langMap = { hi:'hi-IN', en:'en-IN', bho:'hi-IN', pa:'pa-IN' };
+      cbRecog.lang = langMap[cbLang] || 'hi-IN';
+      cbRecog.continuous = false; cbRecog.interimResults = true;
+      const btn = document.getElementById('cb-mic-btn');
+      const bar = document.getElementById('cb-voice-bar');
+      cbRecog.onstart = () => { cbMicActive = true; btn.classList.add('voice-pulse','bg-red-600'); btn.classList.remove('bg-green-700'); bar.classList.remove('hidden'); };
+      cbRecog.onresult = (e) => { document.getElementById('cb-input').value = Array.from(e.results).map(r=>r[0].transcript).join(''); };
+      cbRecog.onend = () => { cbMicActive = false; btn.classList.remove('voice-pulse','bg-red-600'); btn.classList.add('bg-green-700'); bar.classList.add('hidden'); const t = document.getElementById('cb-input').value.trim(); if(t) setTimeout(cbSend, 300); };
+      cbRecog.onerror = () => { cbMicActive = false; btn.classList.remove('voice-pulse','bg-red-600'); btn.classList.add('bg-green-700'); bar.classList.add('hidden'); };
+      cbRecog.start();
+    }
+  </script>
+</body>
+</html>

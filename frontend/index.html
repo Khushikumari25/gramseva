@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GramSeva - One Village At A Time. AI-powered rural ecosystem platform.">
+  <meta name="theme-color" content="#2E7D32">
+  <title>GramSeva - One Village At A Time</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'light-bg': '#F5F1E8',
+            'light-card': '#FAFAF7',
+            'light-text': '#1F2937',
+            'dark-bg': '#121212',
+            'dark-card': '#1E1E1E',
+            'dark-text': '#F3F4F6',
+          },
+          fontFamily: {
+            inter: ['Inter', 'Noto Sans Devanagari', 'sans-serif'],
+            poppins: ['Poppins', 'Noto Sans Devanagari', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body class="font-inter transition-colors duration-300">
+  <!-- Navigation -->
+  <nav id="navbar" class="fixed top-0 w-full z-50 backdrop-blur-md bg-white/80 dark:bg-zinc-900/80 border-b border-gray-200 dark:border-zinc-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="#home" class="flex items-center gap-2">
+          <img src="/assets/images/logo.png" alt="GramSeva" class="w-9 h-9 rounded-full object-contain">
+          <span class="text-xl font-poppins font-bold text-green-800 dark:text-green-400">GramSeva</span>
+        </a>
+        <div class="hidden md:flex items-center gap-5" id="nav-links">
+          <a href="#home" class="nav-link" data-i18n="nav.home">Home</a>
+          <a href="#schemes" class="nav-link" data-i18n="nav.schemes">Schemes</a>
+          <a href="#marketplace" class="nav-link" data-i18n="nav.marketplace">Marketplace</a>
+          <a href="#equipment" class="nav-link" data-i18n="nav.equipment">Equipment</a>
+          <a href="#crop-disease" class="nav-link">Crop AI</a>
+          <a href="#tourism" class="nav-link" data-i18n="nav.tourism">Tourism</a>
+          <a href="#emergency" class="nav-link" data-i18n="nav.emergency">Emergency</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <select id="lang-selector" class="text-sm bg-transparent border border-gray-300 dark:border-zinc-600 rounded-lg px-2 py-1">
+            <option value="hi">हिन्दी</option>
+            <option value="en">English</option>
+            <option value="bho">भोजपुरी</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+            <option value="hne">हरियाणवी</option>
+          </select>
+          <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800">
+            <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          </button>
+          <button id="auth-btn" class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-lg text-sm font-medium" data-i18n="nav.login">Login</button>
+          <button id="mobile-menu-btn" class="md:hidden p-2"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden fixed inset-0 z-40 bg-white dark:bg-zinc-900 pt-20 px-6">
+    <div class="flex flex-col gap-4">
+      <a href="#home" class="mobile-nav-link text-lg" data-i18n="nav.home">Home</a>
+      <a href="#schemes" class="mobile-nav-link text-lg" data-i18n="nav.schemes">Schemes</a>
+      <a href="#marketplace" class="mobile-nav-link text-lg" data-i18n="nav.marketplace">Marketplace</a>
+      <a href="#equipment" class="mobile-nav-link text-lg" data-i18n="nav.equipment">Equipment</a>
+      <a href="#crop-disease" class="mobile-nav-link text-lg">Crop Disease AI</a>
+      <a href="#weather" class="mobile-nav-link text-lg">Weather</a>
+      <a href="#tourism" class="mobile-nav-link text-lg" data-i18n="nav.tourism">Tourism</a>
+      <a href="#emergency" class="mobile-nav-link text-lg" data-i18n="nav.emergency">Emergency</a>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section id="home" class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-amber-50 dark:from-zinc-900 dark:to-zinc-800"></div>
+    <div class="absolute inset-0 opacity-10" style="background-image: url('/assets/images/hero-farmer.jpg'); background-size: cover; background-position: center;"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-8" id="hero-content">
+          <div class="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 px-4 py-2 rounded-full text-sm font-medium">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2L3 7v11h14V7l-7-5z"/></svg>
+            <span data-i18n="hero.badge">AI-Powered Rural Platform</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold leading-tight">
+            <span data-i18n="hero.title">GramSeva</span><br>
+            <span class="text-green-700 dark:text-green-400" data-i18n="hero.subtitle">One Village At A Time</span>
+          </h1>
+          <p class="text-lg text-gray-600 dark:text-gray-300 max-w-lg" data-i18n="hero.description">Empowering farmers, villagers, and rural communities with AI-powered services, government schemes, marketplace, and emergency support.</p>
+          <div class="flex flex-wrap gap-4">
+            <button onclick="navigateTo('schemes')" class="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-xl font-medium transition-all hover:shadow-lg" data-i18n="hero.explore">Explore Schemes</button>
+            <button onclick="openAIAssistant()" class="border-2 border-green-700 dark:border-green-400 text-green-700 dark:text-green-400 px-6 py-3 rounded-xl font-medium hover:bg-green-50 dark:hover:bg-green-900/20 transition-all" data-i18n="hero.askAI">Ask AI Assistant</button>
+          </div>
+          <div class="flex items-center gap-8 pt-4">
+            <div class="text-center"><span class="block text-2xl font-bold text-green-700 dark:text-green-400">50K+</span><span class="text-sm text-gray-500" data-i18n="hero.farmers">Farmers</span></div>
+            <div class="text-center"><span class="block text-2xl font-bold text-green-700 dark:text-green-400">200+</span><span class="text-sm text-gray-500" data-i18n="hero.schemes">Schemes</span></div>
+            <div class="text-center"><span class="block text-2xl font-bold text-green-700 dark:text-green-400">5</span><span class="text-sm text-gray-500" data-i18n="hero.states">States</span></div>
+          </div>
+        </div>
+        <div class="hidden lg:block relative" id="hero-image">
+          <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+            <img src="/assets/images/hero-farmer.jpg" alt="Indian woman farmer harvesting wheat" class="w-full h-[500px] object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+          </div>
+          <div class="absolute -bottom-6 -left-6 bg-white dark:bg-zinc-800 p-4 rounded-xl shadow-lg">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-green-700 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+              </div>
+              <div><p class="font-medium text-sm" data-i18n="hero.verified">Verified Schemes</p><p class="text-xs text-gray-500">200+ Active</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-20 bg-white dark:bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-poppins font-bold mb-4" data-i18n="features.title">Our Services</h2>
+        <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto" data-i18n="features.subtitle">Complete rural ecosystem powered by AI technology</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="features-grid">
+        <div class="feature-card group p-6 rounded-2xl bg-gray-50 dark:bg-zinc-800 hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="navigateTo('schemes')">
+          <div class="w-12 h-12 bg-green-100 dark:bg-green-900/40 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-green-700 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+          <h3 class="text-lg font-semibold mb-2" data-i18n="features.schemes">Government Schemes</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm" data-i18n="features.schemesDesc">Access 200+ government schemes for Bihar, Haryana, UP, Punjab, Jharkhand</p>
+        </div>
+        <div class="feature-card group p-6 rounded-2xl bg-gray-50 dark:bg-zinc-800 hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="navigateTo('marketplace')">
+          <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-amber-700 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg></div>
+          <h3 class="text-lg font-semibold mb-2" data-i18n="features.marketplace">Marketplace</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm" data-i18n="features.marketplaceDesc">Buy and sell dairy, handicrafts, organic products, and more</p>
+        </div>
+        <div class="feature-card group p-6 rounded-2xl bg-gray-50 dark:bg-zinc-800 hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="navigateTo('equipment')">
+          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-blue-700 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg></div>
+          <h3 class="text-lg font-semibold mb-2" data-i18n="features.equipment">Equipment Rental</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm" data-i18n="features.equipmentDesc">Rent tractors, harvesters, pump sets and farming machines</p>
+        </div>
+        <div class="feature-card group p-6 rounded-2xl bg-gray-50 dark:bg-zinc-800 hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="openAIAssistant()">
+          <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/40 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-purple-700 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+          <h3 class="text-lg font-semibold mb-2" data-i18n="features.ai">AI Assistant</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm" data-i18n="features.aiDesc">Multilingual voice AI for farming guidance and scheme help</p>
+        </div>
+        <div class="feature-card group p-6 rounded-2xl bg-gray-50 dark:bg-zinc-800 hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="navigateTo('crop-disease')">
+          <div class="w-12 h-12 bg-red-100 dark:bg-red-900/40 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-red-700 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+          <h3 class="text-lg font-semibold mb-2" data-i18n="features.disease">Crop Disease Detection</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm" data-i18n="features.diseaseDesc">Upload crop photos for AI-powered disease detection and treatment</p>
+        </div>
+        <div class="feature-card group p-6 rounded-2xl bg-gray-50 dark:bg-zinc-800 hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="navigateTo('emergency')">
+          <div class="w-12 h-12 bg-rose-100 dark:bg-rose-900/40 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-rose-700 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg></div>
+          <h3 class="text-lg font-semibold mb-2" data-i18n="features.emergency">Emergency Services</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm" data-i18n="features.emergencyDesc">One-click emergency calls for ambulance, police, fire brigade</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Schemes Section -->
+  <section id="schemes" class="py-20 bg-gray-50 dark:bg-zinc-800/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+        <div>
+          <h2 class="text-3xl font-poppins font-bold" data-i18n="schemes.title">Government Schemes</h2>
+          <p class="text-gray-600 dark:text-gray-400 mt-2" data-i18n="schemes.subtitle">Latest schemes for farmers and rural communities</p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <select id="scheme-state-filter" onchange="filterSchemes()" class="border dark:border-zinc-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-800">
+            <option value="">All States</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Jharkhand">Jharkhand</option>
+          </select>
+          <input type="text" id="scheme-search" onkeyup="filterSchemes()" placeholder="Search schemes..." class="border dark:border-zinc-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-800 w-48">
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="schemes-grid"></div>
+    </div>
+  </section>
+
+  <!-- Marketplace Section -->
+  <section id="marketplace" class="py-20 bg-white dark:bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+        <div>
+          <h2 class="text-3xl font-poppins font-bold" data-i18n="marketplace.title">Marketplace</h2>
+          <p class="text-gray-600 dark:text-gray-400 mt-2" data-i18n="marketplace.subtitle">Fresh products from rural entrepreneurs</p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <select id="product-category-filter" onchange="filterProducts()" class="border dark:border-zinc-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-800">
+            <option value="">All Categories</option>
+            <option value="dairy">Dairy</option>
+            <option value="blankets">Blankets</option>
+            <option value="handicrafts">Handicrafts</option>
+            <option value="homemade">Homemade</option>
+            <option value="organic">Organic</option>
+            <option value="farming">Farming</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6" id="marketplace-grid"></div>
+    </div>
+  </section>
+
+  <!-- Equipment Section -->
+  <section id="equipment" class="py-20 bg-gray-50 dark:bg-zinc-800/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+        <div>
+          <h2 class="text-3xl font-poppins font-bold" data-i18n="equipment.title">Equipment Rental</h2>
+          <p class="text-gray-600 dark:text-gray-400 mt-2" data-i18n="equipment.subtitle">Rent farming equipment at affordable prices</p>
+        </div>
+        <div class="flex gap-2">
+          <select id="equip-type-filter" onchange="filterEquipment()" class="border dark:border-zinc-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-800">
+            <option value="">All Types</option>
+            <option value="tractor">Tractor</option>
+            <option value="pump_set">Pump Set</option>
+            <option value="harvester">Harvester</option>
+            <option value="farming_machine">Farming Machine</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="equipment-grid"></div>
+    </div>
+  </section>
+
+  <!-- Crop Disease Detection Section -->
+  <section id="crop-disease" class="py-20 bg-white dark:bg-zinc-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-poppins font-bold mb-3">AI Crop Disease Detection</h2>
+        <p class="text-gray-600 dark:text-gray-400">Upload a photo of your crop leaf to detect diseases and get treatment recommendations</p>
+      </div>
+      <div class="bg-gray-50 dark:bg-zinc-800 rounded-2xl p-8 shadow-sm border dark:border-zinc-700">
+        <div id="crop-upload-area" class="border-2 border-dashed border-gray-300 dark:border-zinc-600 rounded-xl p-12 text-center cursor-pointer hover:border-green-500 transition-colors" onclick="document.getElementById('crop-file-input').click()">
+          <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <p class="text-lg font-medium mb-2">Drop crop image here or click to upload</p>
+          <p class="text-sm text-gray-500">Supports JPG, PNG, WebP (max 10MB)</p>
+          <input type="file" id="crop-file-input" accept="image/*" class="hidden" onchange="handleCropUpload(this)">
+        </div>
+        <div id="crop-preview" class="hidden mt-6 text-center">
+          <img id="crop-preview-img" class="max-h-64 mx-auto rounded-xl bg-gray-100 dark:bg-zinc-700 object-contain">
+          <button onclick="analyzeCrop()" class="mt-4 bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-xl font-medium transition-colors">Analyze Crop</button>
+        </div>
+        <div id="crop-loading" class="hidden mt-8 text-center py-8">
+          <div class="spinner mx-auto mb-4"></div>
+          <p class="text-gray-600 dark:text-gray-400">Analyzing your crop image...</p>
+        </div>
+        <div id="crop-results" class="hidden mt-8 space-y-4">
+          <div class="flex items-center gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
+            <svg class="w-6 h-6 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <div><p class="font-semibold" id="crop-disease-name">--</p><p class="text-sm text-gray-600 dark:text-gray-400">Severity: <span id="crop-severity" class="font-medium">--</span></p></div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl"><h4 class="font-semibold text-green-800 dark:text-green-400 mb-2">Pesticides</h4><ul id="crop-pesticides" class="text-sm space-y-1"></ul></div>
+            <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl"><h4 class="font-semibold text-blue-800 dark:text-blue-400 mb-2">Fertilizers</h4><ul id="crop-fertilizers" class="text-sm space-y-1"></ul></div>
+          </div>
+          <div class="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl"><h4 class="font-semibold text-purple-800 dark:text-purple-400 mb-2">Treatment</h4><ul id="crop-treatment" class="text-sm space-y-1"></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Weather & Smart Farming Section -->
+  <section id="weather" class="py-20 bg-gray-50 dark:bg-zinc-800/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-poppins font-bold mb-3">Smart Farming & Weather</h2>
+        <p class="text-gray-600 dark:text-gray-400">Real-time weather updates and farming recommendations</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Weather Card -->
+        <div class="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-sm border dark:border-zinc-700">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+            </div>
+            <h3 class="font-semibold text-lg">Weather Today</h3>
+          </div>
+          <div id="weather-data" class="space-y-3">
+            <div class="flex justify-between items-center"><span class="text-gray-500">Temperature</span><span class="font-bold text-2xl" id="weather-temp">32 C</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">Humidity</span><span class="font-medium" id="weather-humidity">65%</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">Wind</span><span class="font-medium" id="weather-wind">3.5 km/h</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">Condition</span><span class="font-medium" id="weather-desc">Clear Sky</span></div>
+          </div>
+          <button onclick="loadWeather()" class="mt-4 w-full border border-blue-500 text-blue-600 py-2 rounded-lg text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20">Refresh Weather</button>
+        </div>
+        <!-- Farming Tips -->
+        <div class="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-sm border dark:border-zinc-700">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/40 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <h3 class="font-semibold text-lg">Farming Tips</h3>
+          </div>
+          <ul class="space-y-3 text-sm">
+            <li class="flex gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg><span>Use neem oil as organic pesticide for most crops</span></li>
+            <li class="flex gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg><span>Get soil tested before every season at local KVK</span></li>
+            <li class="flex gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg><span>Drip irrigation saves 40-60% water compared to flood</span></li>
+            <li class="flex gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg><span>Intercropping increases yield and reduces pest attacks</span></li>
+            <li class="flex gap-2"><svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg><span>Use certified seeds from government centers only</span></li>
+          </ul>
+        </div>
+        <!-- Alerts -->
+        <div class="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-sm border dark:border-zinc-700">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/40 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </div>
+            <h3 class="font-semibold text-lg">Seasonal Alerts</h3>
+          </div>
+          <div class="space-y-3">
+            <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border-l-4 border-yellow-400"><p class="text-sm font-medium">Kharif Season</p><p class="text-xs text-gray-500 mt-1">Prepare fields for paddy sowing. Best time: June-July</p></div>
+            <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-400"><p class="text-sm font-medium">Monsoon Advisory</p><p class="text-xs text-gray-500 mt-1">Ensure proper drainage in fields. Check bund repairs.</p></div>
+            <div class="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border-l-4 border-green-400"><p class="text-sm font-medium">Market Update</p><p class="text-xs text-gray-500 mt-1">Wheat MSP increased to Rs 2275/quintal for 2024-25</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tourism Section -->
+  <section id="tourism" class="py-20 bg-white dark:bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-poppins font-bold" data-i18n="tourism.title">Village Tourism</h2>
+        <p class="text-gray-600 dark:text-gray-400 mt-2" data-i18n="tourism.subtitle">Discover the beauty of rural India</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="tourism-grid"></div>
+    </div>
+  </section>
+
+  <!-- Emergency Section -->
+  <section id="emergency" class="py-20 bg-red-50 dark:bg-zinc-800/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-poppins font-bold text-red-800 dark:text-red-400" data-i18n="emergency.title">Emergency Services</h2>
+        <p class="text-gray-600 dark:text-gray-400 mt-2" data-i18n="emergency.subtitle">Quick access to emergency helplines</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="emergency-grid"></div>
+    </div>
+  </section>
+
+  <!-- AI Assistant Modal -->
+  <div id="ai-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white dark:bg-zinc-900 w-full sm:w-[480px] sm:max-h-[600px] rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+      <div class="flex items-center justify-between p-4 border-b dark:border-zinc-700">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center"><svg class="w-5 h-5 text-green-700 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z"/></svg></div>
+          <div><h3 class="font-semibold" data-i18n="ai.title">GramSeva AI</h3><p class="text-xs text-gray-500" data-i18n="ai.subtitle">Your farming assistant</p></div>
+        </div>
+        <button onclick="closeAIAssistant()" class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      </div>
+      <div id="ai-messages" class="flex-1 overflow-y-auto p-4 space-y-4 min-h-[300px] max-h-[400px]">
+        <div class="flex gap-3">
+          <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex-shrink-0 flex items-center justify-center"><svg class="w-4 h-4 text-green-700 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16 8 8 0 000-16z"/></svg></div>
+          <div class="bg-gray-100 dark:bg-zinc-800 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%]"><p class="text-sm" data-i18n="ai.welcome">Namaste! I am GramSeva AI. Ask me about farming, schemes, weather, or equipment.</p></div>
+        </div>
+      </div>
+      <div class="p-4 border-t dark:border-zinc-700">
+        <div class="flex gap-2">
+          <button id="voice-btn" onclick="startVoiceInput()" class="p-3 bg-green-100 dark:bg-green-900/40 rounded-xl hover:bg-green-200 dark:hover:bg-green-900/60 transition-colors"><svg class="w-5 h-5 text-green-700 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg></button>
+          <input id="ai-input" type="text" class="flex-1 border dark:border-zinc-600 rounded-xl px-4 py-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500 text-sm" data-i18n-placeholder="ai.placeholder" placeholder="Type your question...">
+          <button onclick="sendAIMessage()" class="p-3 bg-green-700 text-white rounded-xl hover:bg-green-800 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></button>
+        </div>
+        <a href="/pages/chatbot.html" class="block text-center text-xs text-green-700 dark:text-green-400 mt-2 hover:underline">Open Full Chatbot</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white dark:bg-zinc-900 w-full max-w-md mx-4 rounded-2xl shadow-2xl p-8 relative">
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-poppins font-bold" id="auth-title" data-i18n="auth.login">Login</h2>
+        <p class="text-gray-500 text-sm mt-1" data-i18n="auth.loginSubtitle">Access your GramSeva account</p>
+      </div>
+      <div id="auth-tabs" class="flex gap-2 mb-6 bg-gray-100 dark:bg-zinc-800 rounded-xl p-1">
+        <button onclick="switchAuthTab('login')" class="auth-tab active flex-1 py-2 rounded-lg text-sm font-medium" data-i18n="auth.login">Login</button>
+        <button onclick="switchAuthTab('register')" class="auth-tab flex-1 py-2 rounded-lg text-sm font-medium" data-i18n="auth.register">Register</button>
+        <button onclick="switchAuthTab('otp')" class="auth-tab flex-1 py-2 rounded-lg text-sm font-medium" data-i18n="auth.otp">OTP</button>
+      </div>
+      <form id="auth-form" class="space-y-4">
+        <div id="register-fields" class="hidden space-y-4">
+          <input type="text" name="name" placeholder="Full Name" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500">
+          <select name="role" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500"><option value="farmer">Farmer</option><option value="seller">Seller</option><option value="equipment_owner">Equipment Owner</option></select>
+          <select name="state" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500"><option value="">Select State</option><option value="Bihar">Bihar</option><option value="Haryana">Haryana</option><option value="Uttar Pradesh">Uttar Pradesh</option><option value="Punjab">Punjab</option><option value="Jharkhand">Jharkhand</option></select>
+        </div>
+        <div id="email-fields" class="space-y-4">
+          <input type="email" name="email" placeholder="Email" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500">
+          <input type="password" name="password" placeholder="Password" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
+        <div id="otp-fields" class="hidden space-y-4">
+          <input type="tel" name="phone" placeholder="Mobile Number" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500">
+          <input type="text" name="otp" placeholder="Enter OTP" class="hidden w-full border dark:border-zinc-600 rounded-xl px-4 py-3 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500">
+          <button type="button" id="send-otp-btn" onclick="handleSendOtp()" class="w-full bg-green-700 text-white py-3 rounded-xl font-medium" data-i18n="auth.sendOtp">Send OTP</button>
+        </div>
+        <button type="submit" id="auth-submit-btn" class="w-full bg-green-700 hover:bg-green-800 text-white py-3 rounded-xl font-medium transition-colors" data-i18n="auth.login">Login</button>
+      </form>
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 dark:bg-black text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <img src="/assets/images/logo.png" alt="GramSeva" class="w-10 h-10 rounded-full object-contain bg-white p-1">
+            <span class="text-xl font-poppins font-bold">GramSeva</span>
+          </div>
+          <p class="text-gray-400 text-sm" data-i18n="footer.description">Empowering rural India with technology, one village at a time.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4" data-i18n="footer.services">Services</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#schemes" class="hover:text-green-400">Schemes</a></li>
+            <li><a href="#marketplace" class="hover:text-green-400">Marketplace</a></li>
+            <li><a href="#equipment" class="hover:text-green-400">Equipment</a></li>
+            <li><a href="#crop-disease" class="hover:text-green-400">Crop AI</a></li>
+            <li><a href="#tourism" class="hover:text-green-400">Tourism</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4" data-i18n="footer.support">Support</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-green-400">Help Center</a></li>
+            <li><a href="#emergency" class="hover:text-green-400">Emergency</a></li>
+            <li><a href="#" class="hover:text-green-400">Contact Us</a></li>
+            <li><a href="/pages/admin.html" class="hover:text-green-400">Admin Panel</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4" data-i18n="footer.connect">Connect</h4>
+          <p class="text-sm text-gray-400 mb-2">support@gramseva.in</p>
+          <p class="text-sm text-gray-400">1800-180-GRAM</p>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-12 pt-8 text-center text-sm text-gray-500">
+        <p>2024 GramSeva. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating AI Button -->
+  <button onclick="openAIAssistant()" class="fixed bottom-6 right-6 w-14 h-14 bg-green-700 hover:bg-green-800 text-white rounded-full shadow-lg flex items-center justify-center z-30 transition-transform hover:scale-110" id="ai-fab">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+  </button>
+
+  <!-- Scripts -->
+  <script src="/js/translations.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/components/schemes.js"></script>
+  <script src="/js/components/marketplace.js"></script>
+  <script src="/js/components/equipment.js"></script>
+  <script src="/js/components/emergency.js"></script>
+  <script src="/js/components/ai-assistant.js"></script>
+  <script src="/js/components/tourism.js"></script>
+  <script src="/js/components/crop-disease.js"></script>
+  <script src="/js/components/weather.js"></script>
+</body>
+</html>

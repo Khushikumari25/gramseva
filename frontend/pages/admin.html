@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GramSeva Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body class="font-inter min-h-screen bg-gray-50 dark:bg-zinc-900">
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 min-h-screen bg-white dark:bg-zinc-800 border-r dark:border-zinc-700 p-6 hidden lg:block">
+      <div class="flex items-center gap-2 mb-8">
+        <svg class="w-8 h-8 text-green-700" viewBox="0 0 32 32" fill="currentColor"><path d="M16 2C10 2 4 6 4 12c0 4 2 7 5 9l7 9 7-9c3-2 5-5 5-9 0-6-6-10-12-10z"/></svg>
+        <span class="text-lg font-poppins font-bold text-green-800 dark:text-green-400">Admin Panel</span>
+      </div>
+      <nav class="space-y-2">
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-xl font-medium text-sm" onclick="showSection('dashboard')">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          Dashboard
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-700 rounded-xl text-sm" onclick="showSection('users')">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          Users
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-700 rounded-xl text-sm" onclick="showSection('schemes')">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Schemes
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-700 rounded-xl text-sm" onclick="showSection('products')">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          Marketplace
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-700 rounded-xl text-sm" onclick="showSection('equipment')">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Equipment
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-700 rounded-xl text-sm" onclick="showSection('analytics')">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          Analytics
+        </a>
+      </nav>
+      <div class="mt-auto pt-8">
+        <a href="/" class="flex items-center gap-2 text-sm text-gray-500 hover:text-green-700">Back to Site</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+      <div class="mb-8 flex justify-between items-center">
+        <h1 class="text-2xl font-poppins font-bold">Dashboard</h1>
+        <div class="flex items-center gap-4">
+          <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+          <span class="text-sm text-gray-500">Admin</span>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div id="dashboard-section" class="space-y-8">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 border dark:border-zinc-700">
+            <p class="text-sm text-gray-500 mb-1">Users</p>
+            <p class="text-2xl font-bold text-green-700 dark:text-green-400" id="stat-users">0</p>
+          </div>
+          <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 border dark:border-zinc-700">
+            <p class="text-sm text-gray-500 mb-1">Products</p>
+            <p class="text-2xl font-bold text-amber-700 dark:text-amber-400" id="stat-products">0</p>
+          </div>
+          <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 border dark:border-zinc-700">
+            <p class="text-sm text-gray-500 mb-1">Equipment</p>
+            <p class="text-2xl font-bold text-blue-700 dark:text-blue-400" id="stat-equipment">0</p>
+          </div>
+          <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 border dark:border-zinc-700">
+            <p class="text-sm text-gray-500 mb-1">Schemes</p>
+            <p class="text-2xl font-bold text-purple-700 dark:text-purple-400" id="stat-schemes">0</p>
+          </div>
+          <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 border dark:border-zinc-700">
+            <p class="text-sm text-gray-500 mb-1">Orders</p>
+            <p class="text-2xl font-bold text-rose-700 dark:text-rose-400" id="stat-orders">0</p>
+          </div>
+          <div class="bg-white dark:bg-zinc-800 rounded-xl p-4 border dark:border-zinc-700">
+            <p class="text-sm text-gray-500 mb-1">Tourism</p>
+            <p class="text-2xl font-bold text-teal-700 dark:text-teal-400" id="stat-tourism">0</p>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 border dark:border-zinc-700">
+            <h3 class="font-semibold mb-4">Recent Users</h3>
+            <div id="recent-users" class="space-y-3"></div>
+          </div>
+          <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 border dark:border-zinc-700">
+            <h3 class="font-semibold mb-4">Recent Orders</h3>
+            <div id="recent-orders" class="space-y-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Section (hidden by default) -->
+      <div id="users-section" class="hidden">
+        <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 border dark:border-zinc-700">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-semibold">All Users</h3>
+            <input type="text" placeholder="Search users..." class="border dark:border-zinc-600 rounded-lg px-3 py-2 text-sm bg-transparent" id="user-search">
+          </div>
+          <div id="users-list" class="space-y-2"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    const token = localStorage.getItem('gramseva_token');
+    if (!token) window.location.href = '/';
+
+    async function loadDashboard() {
+      try {
+        const res = await fetch(`${API_BASE}/admin/dashboard`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          const s = data.data.stats;
+          document.getElementById('stat-users').textContent = s.users;
+          document.getElementById('stat-products').textContent = s.products;
+          document.getElementById('stat-equipment').textContent = s.equipment;
+          document.getElementById('stat-schemes').textContent = s.schemes;
+          document.getElementById('stat-orders').textContent = s.orders;
+          document.getElementById('stat-tourism').textContent = s.tourism;
+
+          const usersDiv = document.getElementById('recent-users');
+          usersDiv.innerHTML = data.data.recentUsers.map(u => `
+            <div class="flex justify-between items-center py-2 border-b dark:border-zinc-700 last:border-0">
+              <span class="text-sm">${u.name}</span>
+              <span class="text-xs px-2 py-1 bg-gray-100 dark:bg-zinc-700 rounded">${u.role}</span>
+            </div>`).join('');
+        }
+      } catch (e) {
+        console.error('Dashboard load failed');
+      }
+    }
+
+    function showSection(section) {
+      document.querySelectorAll('[id$="-section"]').forEach(el => el.classList.add('hidden'));
+      const el = document.getElementById(section + '-section');
+      if (el) el.classList.remove('hidden');
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      html.classList.toggle('dark');
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+/* GramSeva - Main Stylesheet */
+:root {
+  --bg-light: #F5F1E8;
+  --primary-green: #2E7D32;
+  --card-light: #FAFAF7;
+  --text-light: #1F2937;
+  --bg-dark: #121212;
+  --card-dark: #1E1E1E;
+  --accent-green: #66BB6A;
+  --text-dark: #F3F4F6;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+  line-height: 1.6;
+}
+
+html[data-theme="dark"] body {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.font-inter { font-family: 'Inter', 'Noto Sans Devanagari', sans-serif; }
+.font-poppins { font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif; }
+
+/* Dark mode utilities */
+html[data-theme="dark"] .dark\:bg-zinc-900 { background-color: #18181b; }
+html[data-theme="dark"] .dark\:bg-zinc-800 { background-color: #27272a; }
+html[data-theme="dark"] .dark\:bg-zinc-800\/50 { background-color: rgba(39,39,42,0.5); }
+html[data-theme="dark"] .dark\:bg-black { background-color: #000; }
+html[data-theme="dark"] .dark\:text-dark-text { color: var(--text-dark); }
+html[data-theme="dark"] .dark\:border-zinc-700 { border-color: #3f3f46; }
+html[data-theme="dark"] .dark\:border-zinc-600 { border-color: #52525b; }
+
+/* Navigation */
+.nav-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  transition: color 0.2s;
+}
+.nav-link:hover { color: var(--primary-green); }
+html[data-theme="dark"] .nav-link { color: #d1d5db; }
+html[data-theme="dark"] .nav-link:hover { color: var(--accent-green); }
+
+/* Auth tabs */
+.auth-tab {
+  color: #6b7280;
+  transition: all 0.2s;
+}
+.auth-tab.active {
+  background-color: white;
+  color: var(--primary-green);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+html[data-theme="dark"] .auth-tab.active {
+  background-color: #27272a;
+  color: var(--accent-green);
+}
+
+/* Cards */
+.scheme-card, .product-card, .equipment-card, .tourism-card {
+  background: var(--card-light);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+html[data-theme="dark"] .scheme-card,
+html[data-theme="dark"] .product-card,
+html[data-theme="dark"] .equipment-card,
+html[data-theme="dark"] .tourism-card {
+  background: var(--card-dark);
+  border-color: rgba(255,255,255,0.05);
+}
+.scheme-card:hover, .product-card:hover,
+.equipment-card:hover, .tourism-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* Emergency cards */
+.emergency-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.emergency-card:hover {
+  border-color: #ef4444;
+  transform: scale(1.02);
+}
+html[data-theme="dark"] .emergency-card {
+  background: var(--card-dark);
+}
+
+/* Feature cards animation */
+.feature-card { transform: translateY(0); }
+.feature-card:hover { transform: translateY(-6px); }
+
+/* Glass effect */
+.glass {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+html[data-theme="dark"] .glass {
+  background: rgba(30,30,30,0.7);
+  border-color: rgba(255,255,255,0.1);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #a8a8a8; border-radius: 3px; }
+html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #555; }
+
+/* Loading spinner */
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(46,125,50,0.2);
+  border-top-color: var(--primary-green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Pulse animation for voice button */
+.voice-active {
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(46,125,50,0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(46,125,50,0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-stats { flex-direction: column; gap: 1rem; }
+}

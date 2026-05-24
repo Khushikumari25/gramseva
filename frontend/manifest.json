@@ -1,0 +1,24 @@
+{
+  "name": "GramSeva - One Village At A Time",
+  "short_name": "GramSeva",
+  "description": "AI-powered rural ecosystem platform for farmers and rural communities",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F1E8",
+  "theme_color": "#2E7D32",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["agriculture", "government", "shopping"],
+  "lang": "hi"
+}

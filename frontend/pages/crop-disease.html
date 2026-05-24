@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Disease Scanner - GramSeva</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0a0f0a;--card:#111c11;--border:rgba(34,197,94,0.18);--green:#22c55e;--green-dark:#16a34a;--text:#f0fdf4;--muted:#86efac}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    nav{background:#052e16;height:56px;display:flex;align-items:center;padding:0 20px;justify-content:space-between;border-bottom:1px solid var(--border)}
+    .logo{color:#fff;font-weight:700;font-size:1.1rem;text-decoration:none}
+    .logo span{color:#f5a623}
+    .nav-links{display:flex;gap:6px}
+    .nav-link{color:rgba(255,255,255,.7);font-size:.82rem;padding:6px 14px;border-radius:8px;text-decoration:none;transition:.2s}
+    .nav-link:hover{background:rgba(255,255,255,.08);color:#fff}
+    .nav-link.active{background:var(--green);color:#fff;font-weight:600}
+    .container{max-width:800px;margin:0 auto;padding:40px 20px}
+    h1{font-size:1.8rem;font-weight:700;text-align:center;margin-bottom:8px}
+    .subtitle{text-align:center;color:var(--muted);font-size:.9rem;margin-bottom:40px}
+    .steps{display:flex;justify-content:center;gap:40px;margin-bottom:40px}
+    .step{text-align:center}
+    .step-icon{width:48px;height:48px;background:var(--card);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:1.2rem}
+    .step-label{font-size:.72rem;color:var(--muted)}
+    .step-line{width:40px;height:2px;background:var(--border);align-self:center;margin-bottom:20px}
+    .upload-area{background:var(--card);border:2px dashed var(--border);border-radius:16px;padding:60px 40px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:30px}
+    .upload-area:hover{border-color:var(--green)}
+    .upload-area svg{width:48px;height:48px;margin:0 auto 16px;color:var(--green)}
+    .upload-area p{font-size:.95rem;margin-bottom:6px}
+    .upload-area small{color:rgba(134,239,172,.5);font-size:.8rem}
+    .crop-tags{margin-bottom:30px}
+    .crop-tags h4{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px}
+    .tag{padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--muted);cursor:pointer;transition:.2s}
+    .tag:hover,.tag.active{background:rgba(34,197,94,.15);border-color:var(--green);color:var(--green)}
+    .api-key-row{display:flex;gap:10px;align-items:center;margin-bottom:30px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px}
+    .api-key-row input{flex:1;background:transparent;border:none;color:var(--text);font-size:.85rem;outline:none}
+    .api-key-row input::placeholder{color:rgba(134,239,172,.3)}
+    .api-key-row a{color:var(--green);font-size:.78rem;white-space:nowrap;text-decoration:none}
+    .actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{padding:12px 24px;border-radius:10px;border:none;font-family:inherit;font-size:.88rem;cursor:pointer;font-weight:600;transition:.2s;display:inline-flex;align-items:center;gap:8px}
+    .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
+    .btn-outline:hover{border-color:var(--green);color:var(--green)}
+    .btn-green{background:var(--green);color:#fff}
+    .btn-green:hover{background:var(--green-dark)}
+    .btn-green:disabled{opacity:.5;cursor:not-allowed}
+    #preview-section{display:none;margin-bottom:30px}
+    #preview-img{max-height:250px;border-radius:12px;margin:0 auto;display:block;border:2px solid var(--border)}
+    #results{display:none;margin-top:30px}
+    .result-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+    .result-card h3{font-size:.9rem;font-weight:700;margin-bottom:10px;color:var(--green)}
+    .result-card p,.result-card li{font-size:.85rem;color:var(--muted);line-height:1.7}
+    .result-card ul{padding-left:16px}
+    .severity-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700}
+    .severity-low{background:rgba(34,197,94,.15);color:#22c55e}
+    .severity-medium{background:rgba(245,166,35,.15);color:#f5a623}
+    .severity-high{background:rgba(239,68,68,.15);color:#ef4444}
+    .spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-section{display:none;text-align:center;padding:40px}
+    .loading-section p{color:var(--muted);margin-top:12px}
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo"><img src="/assets/images/logo.png" alt="" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:6px">Gram<span>Seva</span></a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/pages/dashboard.html" class="nav-link">Dashboard</a>
+      <a href="/pages/crop-disease.html" class="nav-link active">Crop Disease</a>
+      <a href="/pages/chatbot.html" class="nav-link">AI Chat</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Crop Disease Scanner</h1>
+    <p class="subtitle">Take or upload a photo of your crop - our AI instantly identifies diseases, severity and recommends the right treatment.</p>
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step"><div class="step-icon">1</div><div class="step-label">Take Photo</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-icon">2</div><div class="step-label">AI Scans</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-icon">3</div><div class="step-label">Disease Found</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step-icon">4</div><div class="step-label">Get Treatment</div></div>
+    </div>
+
+    <!-- Upload Area -->
+    <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      <p>Drop your crop photo here</p>
+      <small>Supports JPG, PNG, HEIC. Drag and drop or click to browse. Works best in daylight.</small>
+      <input type="file" id="file-input" accept="image/*" hidden onchange="handleFile(this)">
+    </div>
+
+    <!-- Preview -->
+    <div id="preview-section">
+      <img id="preview-img" alt="Crop preview">
+    </div>
+
+    <!-- Crop Tags -->
+    <div class="crop-tags">
+      <h4>Which crop is this? (Optional)</h4>
+      <div class="tags">
+        <span class="tag" onclick="selectCrop(this)">Wheat</span>
+        <span class="tag" onclick="selectCrop(this)">Rice</span>
+        <span class="tag" onclick="selectCrop(this)">Maize</span>
+        <span class="tag" onclick="selectCrop(this)">Potato</span>
+        <span class="tag" onclick="selectCrop(this)">Tomato</span>
+        <span class="tag" onclick="selectCrop(this)">Mustard</span>
+        <span class="tag" onclick="selectCrop(this)">Sugarcane</span>
+        <span class="tag" onclick="selectCrop(this)">Cotton</span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-outline" onclick="useCamera()">Use Camera</button>
+      <button class="btn btn-outline" onclick="document.getElementById('file-input').click()">Upload Photo</button>
+      <button class="btn btn-green" id="scan-btn" onclick="scanDisease()" disabled>Scan for Disease</button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-section" id="loading">
+      <div class="spinner"></div>
+      <p>AI is analyzing your crop image...</p>
+    </div>
+
+    <!-- Results -->
+    <div id="results">
+      <div class="result-card">
+        <h3>Disease Detected</h3>
+        <p><strong id="r-disease">--</strong></p>
+        <p>Severity: <span id="r-severity" class="severity-badge severity-medium">--</span></p>
+      </div>
+      <div class="result-card">
+        <h3>Recommended Pesticides</h3>
+        <ul id="r-pesticides"></ul>
+      </div>
+      <div class="result-card">
+        <h3>Recommended Fertilizers</h3>
+        <ul id="r-fertilizers"></ul>
+      </div>
+      <div class="result-card">
+        <h3>Treatment & Prevention</h3>
+        <ul id="r-treatment"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedFile = null;
+    let selectedCrop = '';
+
+    function selectCrop(el) {
+      document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      selectedCrop = el.textContent;
+    }
+
+    function handleFile(input) {
+      if (!input.files[0]) return;
+      selectedFile = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('preview-img').src = e.target.result;
+        document.getElementById('preview-section').style.display = 'block';
+        document.getElementById('upload-area').style.display = 'none';
+        document.getElementById('scan-btn').disabled = false;
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+
+    function useCamera() {
+      const input = document.getElementById('file-input');
+      input.setAttribute('capture', 'environment');
+      input.click();
+      setTimeout(() => input.removeAttribute('capture'), 1000);
+    }
+
+    async function scanDisease() {
+      if (!selectedFile) return;
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('scan-btn').disabled = true;
+      document.getElementById('scan-btn').innerHTML = '<span class="spinner"></span> Scanning...';
+
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+      if (selectedCrop) formData.append('crop', selectedCrop);
+
+      const token = localStorage.getItem('gramseva_token');
+      try {
+        const res = await fetch('/api/ai/crop-disease', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token || ''}` },
+          body: formData
+        });
+        const data = await res.json();
+        document.getElementById('loading').style.display = 'none';
+
+        if (data.success && data.data) {
+          const r = data.data;
+          document.getElementById('r-disease').textContent = r.disease || 'Analysis Complete';
+          const sev = (r.severity || 'medium').toLowerCase();
+          const sevEl = document.getElementById('r-severity');
+          sevEl.textContent = r.severity || 'Medium';
+          sevEl.className = 'severity-badge severity-' + (sev.includes('high')||sev.includes('critical')?'high':sev.includes('low')?'low':'medium');
+          document.getElementById('r-pesticides').innerHTML = (r.pesticides || ['Consult local KVK']).map(p => `<li>${p}</li>`).join('');
+          document.getElementById('r-fertilizers').innerHTML = (r.fertilizers || ['Balanced NPK']).map(f => `<li>${f}</li>`).join('');
+          document.getElementById('r-treatment').innerHTML = (r.treatment || ['Consult agricultural officer']).map(t => `<li>${t}</li>`).join('');
+          document.getElementById('results').style.display = 'block';
+        }
+      } catch (e) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('r-disease').textContent = 'Could not analyze (check internet)';
+        document.getElementById('r-severity').textContent = 'N/A';
+        document.getElementById('r-pesticides').innerHTML = '<li>Please consult local agricultural officer</li>';
+        document.getElementById('r-fertilizers').innerHTML = '<li>Use balanced NPK fertilizer</li>';
+        document.getElementById('r-treatment').innerHTML = '<li>Remove affected leaves</li><li>Ensure proper drainage</li><li>Use neem oil spray</li>';
+        document.getElementById('results').style.display = 'block';
+      }
+      document.getElementById('scan-btn').disabled = false;
+      document.getElementById('scan-btn').textContent = 'Scan for Disease';
+    }
+
+    // Drag and drop
+    const area = document.getElementById('upload-area');
+    area.addEventListener('dragover', e => { e.preventDefault(); area.style.borderColor = '#22c55e'; });
+    area.addEventListener('dragleave', () => { area.style.borderColor = ''; });
+    area.addEventListener('drop', e => { e.preventDefault(); area.style.borderColor = ''; if(e.dataTransfer.files[0]){document.getElementById('file-input').files=e.dataTransfer.files;handleFile(document.getElementById('file-input'));} });
+  </script>
+</body>
+</html>
