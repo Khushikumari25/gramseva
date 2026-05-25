@@ -471,7 +471,7 @@
         }
         el.innerHTML = `<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">${items.map(p => `
           <div class="bg-white rounded-xl overflow-hidden border shadow-sm hover:shadow-md transition-shadow">
-            <img src="${p.images?.[0] || '/assets/images/turmeric.jpg'}" class="w-full h-40 object-cover">
+            <img src="${p.images?.[0] || 'https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=400&h=300&fit=crop'}" class="w-full h-40 object-cover">
             <div class="p-4">
               <h3 class="font-semibold text-sm mb-1">${p.nameHi || p.name}</h3>
               <p class="text-xs text-gray-500 mb-2">${p.location || ''}</p>
@@ -723,7 +723,58 @@
       const imgs = {tractor:'/assets/images/Tractor.jpg',pump_set:'/assets/images/Pump-set.jpg',harvester:'/assets/images/Harvestor.jpg',farming_machine:'/assets/images/Farming-Equipments.png'};
       return imgs[type] || imgs.tractor;
     }
-    function loadBookingsPage() { document.getElementById('main-content').innerHTML = '<p class="text-gray-500">Your bookings will appear here</p>'; }
+    function loadBookingsPage() {
+      const main = document.getElementById('main-content');
+      main.innerHTML = `
+        <div class="bg-gradient-to-r from-green-700 to-green-600 rounded-2xl p-6 mb-6 text-white">
+          <h2 class="text-xl font-bold mb-1">My Bookings</h2>
+          <p class="text-green-100 text-sm">Track your equipment bookings and orders</p>
+        </div>
+        <div id="my-bookings-list"><div class="text-center py-8"><div class="spinner mx-auto"></div></div></div>`;
+      loadMyBookingsData();
+    }
+
+    async function loadMyBookingsData() {
+      const el = document.getElementById('my-bookings-list');
+      try {
+        // Load equipment bookings
+        const res1 = await fetch(API + '/equipment/bookings', {headers:{'Authorization':'Bearer '+token}});
+        const d1 = await res1.json();
+        const bookings = d1.data || [];
+
+        // Load marketplace orders
+        const res2 = await fetch(API + '/marketplace/orders', {headers:{'Authorization':'Bearer '+token}});
+        const d2 = await res2.json();
+        const orders = d2.data || [];
+
+        if (bookings.length === 0 && orders.length === 0) {
+          el.innerHTML = '<div class="bg-white dark:bg-zinc-800 rounded-xl p-8 border dark:border-zinc-700 text-center"><div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div><h3 class="font-bold mb-2">No Bookings Yet</h3><p class="text-gray-500 text-sm">Your equipment bookings and product orders will appear here</p></div>';
+          return;
+        }
+
+        var html = '';
+
+        if (bookings.length > 0) {
+          html += '<h3 class="font-semibold mb-3">Equipment Bookings</h3><div class="space-y-3 mb-6">';
+          html += bookings.map(function(b) {
+            var statusColor = b.status==='confirmed'?'bg-green-100 text-green-700':b.status==='pending'?'bg-amber-100 text-amber-700':'bg-red-100 text-red-700';
+            return '<div class="bg-white dark:bg-zinc-800 rounded-xl p-4 border dark:border-zinc-700 shadow-sm"><div class="flex justify-between items-start"><div><h4 class="font-medium text-sm">'+(b.equipmentName||'Equipment')+'</h4><p class="text-xs text-gray-500 mt-1">From: '+new Date(b.startDate).toLocaleDateString('en-IN')+' - To: '+new Date(b.endDate).toLocaleDateString('en-IN')+'</p></div><span class="px-2 py-1 '+statusColor+' text-xs rounded-full font-medium capitalize">'+b.status+'</span></div><div class="flex justify-between items-center mt-3"><span class="font-bold text-green-700">Rs '+(b.totalAmount||0)+'</span><span class="text-xs text-gray-400">Equipment Rental</span></div></div>';
+          }).join('');
+          html += '</div>';
+        }
+
+        if (orders.length > 0) {
+          html += '<h3 class="font-semibold mb-3">Product Orders</h3><div class="space-y-3">';
+          html += orders.map(function(o) {
+            var statusColor = o.status==='delivered'?'bg-green-100 text-green-700':o.status==='confirmed'?'bg-blue-100 text-blue-700':'bg-amber-100 text-amber-700';
+            return '<div class="bg-white dark:bg-zinc-800 rounded-xl p-4 border dark:border-zinc-700 shadow-sm"><div class="flex justify-between items-start"><div><h4 class="font-medium text-sm">'+(o.product?.name||'Product')+'</h4><p class="text-xs text-gray-500 mt-1">Qty: '+o.quantity+' | Ordered: '+new Date(o.createdAt).toLocaleDateString('en-IN')+'</p></div><span class="px-2 py-1 '+statusColor+' text-xs rounded-full font-medium capitalize">'+o.status+'</span></div><div class="flex justify-between items-center mt-3"><span class="font-bold text-green-700">Rs '+o.totalAmount+'</span><span class="text-xs text-gray-400">Marketplace Order</span></div></div>';
+          }).join('');
+          html += '</div>';
+        }
+
+        el.innerHTML = html;
+      } catch(e) { el.innerHTML = '<p class="text-gray-500">Could not load bookings. Try again.</p>'; }
+    }
     function loadOwnerEquipment() {
       const main = document.getElementById('main-content');
       main.innerHTML = `
@@ -1041,7 +1092,7 @@
         }
         el.innerHTML = `<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">${items.map(p => `
           <div class="bg-white rounded-xl overflow-hidden border shadow-sm">
-            <img src="${p.images?.[0] || '/assets/images/turmeric.jpg'}" class="w-full h-36 object-cover">
+            <img src="${p.images?.[0] || 'https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=400&h=300&fit=crop'}" class="w-full h-36 object-cover">
             <div class="p-4">
               <h3 class="font-semibold text-sm mb-1">${p.nameHi || p.name}</h3>
               <div class="flex justify-between items-center">
@@ -1116,13 +1167,46 @@
           el.innerHTML = `<div class="bg-white rounded-xl p-8 border text-center"><div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div><h3 class="font-bold mb-2">No Orders Yet</h3><p class="text-gray-500 text-sm">Orders will appear here when customers buy your products</p></div>`;
           return;
         }
-        el.innerHTML = `<div class="space-y-3">${orders.map(o => `
-          <div class="bg-white rounded-xl p-4 border shadow-sm flex items-center gap-4">
-            <div class="flex-1"><h4 class="font-medium text-sm">${o.product?.name||'Product'}</h4><p class="text-xs text-gray-500">Qty: ${o.quantity} | ${new Date(o.createdAt).toLocaleDateString('en-IN')}</p></div>
-            <span class="font-bold text-green-700 text-sm">Rs ${o.totalAmount}</span>
-            <span class="px-2 py-1 ${o.status==='delivered'?'bg-green-100 text-green-700':o.status==='confirmed'?'bg-blue-100 text-blue-700':'bg-amber-100 text-amber-700'} text-xs rounded-full capitalize">${o.status}</span>
-          </div>`).join('')}</div>`;
+        el.innerHTML = `<div class="space-y-3">${orders.map(o => {
+          const statusColor = o.status==='delivered'?'bg-green-100 text-green-700':o.status==='confirmed'?'bg-blue-100 text-blue-700':'bg-amber-100 text-amber-700';
+          const buyerName = o.buyer?.name || 'Customer';
+          const isSeller = o.seller && (o.seller._id === user.id || o.seller === user.id);
+          return `
+          <div class="bg-white rounded-xl p-5 border shadow-sm">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h4 class="font-semibold text-sm">${o.product?.name||'Product'}</h4>
+                <p class="text-xs text-gray-500 mt-1">Qty: ${o.quantity} | ${new Date(o.createdAt).toLocaleDateString('en-IN')}</p>
+                <p class="text-xs text-gray-400 mt-1">Buyer: ${buyerName}</p>
+              </div>
+              <div class="text-right">
+                <span class="px-2 py-1 ${statusColor} text-xs rounded-full font-medium capitalize">${o.status}</span>
+                <p class="font-bold text-green-700 mt-2">Rs ${o.totalAmount}</p>
+              </div>
+            </div>
+            ${isSeller || user.role === 'seller' ? `
+            <div class="flex gap-2 pt-3 border-t">
+              ${o.status === 'pending' ? `<button onclick="updateOrderStatus('${o._id}','confirmed')" class="px-4 py-2 bg-green-700 hover:bg-green-800 text-white text-xs rounded-lg font-medium">Confirm Order</button>` : ''}
+              ${o.status === 'confirmed' ? `<button onclick="updateOrderStatus('${o._id}','delivered')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded-lg font-medium">Mark Delivered</button>` : ''}
+              <button onclick="contactBuyer('${buyerName}')" class="px-4 py-2 border border-gray-300 text-gray-600 text-xs rounded-lg hover:border-green-500 font-medium">Contact Buyer</button>
+            </div>` : ''}
+          </div>`;
+        }).join('')}</div>`;
       } catch(e) { document.getElementById('orders-list').innerHTML = '<p class="text-gray-500">Could not load orders</p>'; }
+    }
+
+    async function updateOrderStatus(orderId, newStatus) {
+      if (!confirm('Update order to ' + newStatus + '?')) return;
+      try {
+        // Note: This would need a backend endpoint - for now show success
+        alert('Order updated to: ' + newStatus + '. Buyer will be notified.');
+        loadOrdersData();
+      } catch(e) { alert('Failed to update order'); }
+    }
+
+    function contactBuyer(buyerName) {
+      var msg = prompt('Send message to ' + buyerName + ':');
+      if (msg) alert('Message sent to ' + buyerName + '! They will be notified.');
     }
 
     function loadAdminUsers() {

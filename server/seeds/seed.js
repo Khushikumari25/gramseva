@@ -183,7 +183,8 @@ const seedData = async () => {
         unit: 'litre',
         seller: seller._id,
         stock: 50,
-        location: 'Muzaffarpur, Bihar'
+        location: 'Muzaffarpur, Bihar',
+        images: ['https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&h=300&fit=crop']
       },
       {
         name: 'Handwoven Blanket',
@@ -195,7 +196,8 @@ const seedData = async () => {
         unit: 'piece',
         seller: seller._id,
         stock: 20,
-        location: 'Muzaffarpur, Bihar'
+        location: 'Muzaffarpur, Bihar',
+        images: ['https://images.unsplash.com/photo-1580301762395-21ce84d00bc6?w=400&h=300&fit=crop']
       },
       {
         name: 'Madhubani Painting',
@@ -207,7 +209,8 @@ const seedData = async () => {
         unit: 'piece',
         seller: seller._id,
         stock: 15,
-        location: 'Madhubani, Bihar'
+        location: 'Madhubani, Bihar',
+        images: ['https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=300&fit=crop']
       },
       {
         name: 'Organic Turmeric Powder',
@@ -219,7 +222,8 @@ const seedData = async () => {
         unit: 'kg',
         seller: seller._id,
         stock: 100,
-        location: 'Patna, Bihar'
+        location: 'Patna, Bihar',
+        images: ['https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=400&h=300&fit=crop']
       },
       {
         name: 'Homemade Pickle (Mango)',
@@ -231,7 +235,8 @@ const seedData = async () => {
         unit: 'kg',
         seller: seller._id,
         stock: 30,
-        location: 'Muzaffarpur, Bihar'
+        location: 'Muzaffarpur, Bihar',
+        images: ['https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=400&h=300&fit=crop']
       }
     ]);
 
