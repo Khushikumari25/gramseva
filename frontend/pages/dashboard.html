@@ -116,6 +116,7 @@
         {id:'crop',icon:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',label:'Crop Scanner'},
         {id:'weather',icon:'M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z',label:'Weather'},
         {id:'tourism',icon:'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z',label:'Tourism'},
+        {id:'add-tourism',icon:'M12 4v16m8-8H4',label:'Add Tourism Place'},
         {id:'emergency',icon:'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z',label:'Emergency'},
         {id:'bookings',icon:'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',label:'My Bookings'},
       ],
@@ -211,6 +212,7 @@
         case 'weather': loadWeatherPage(); break;
         case 'emergency': loadEmergencyPage(); break;
         case 'tourism': loadTourismPage(); break;
+        case 'add-tourism': loadAddTourism(); break;
         case 'bookings': loadBookingsPage(); break;
         case 'my-equipment': loadOwnerEquipment(); break;
         case 'add-equipment': loadAddEquipment(); break;
@@ -711,6 +713,52 @@
     function getTourismImg(category) {
       const imgs = {heritage:'/assets/images/Nalanada.jpg',nature:'/assets/images/chitrakoot.png',cultural:'/assets/images/surajkund-mela.jpg',religious:'/assets/images/chitrakoot.png'};
       return imgs[category] || imgs.heritage;
+    }
+
+    function loadAddTourism() {
+      const main = document.getElementById('main-content');
+      main.innerHTML = `
+        <div class="bg-gradient-to-r from-teal-700 to-teal-600 rounded-2xl p-6 mb-6 text-white">
+          <h2 class="text-xl font-bold mb-1">Add Tourism Place</h2>
+          <p class="text-teal-100 text-sm">Share a beautiful place from your village or area</p>
+        </div>
+        <div class="bg-white dark:bg-zinc-800 rounded-xl p-6 border dark:border-zinc-700 shadow-sm max-w-2xl">
+          <form id="add-tourism-form" onsubmit="submitTourism(event)" enctype="multipart/form-data">
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <div><label class="block text-sm font-medium mb-1.5">Place Name</label><input type="text" name="name" required placeholder="e.g. Rajgir Hot Springs" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500"></div>
+              <div><label class="block text-sm font-medium mb-1.5">Name (Hindi)</label><input type="text" name="nameHi" placeholder="e.g. राजगीर गर्म कुंड" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500"></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <div><label class="block text-sm font-medium mb-1.5">Category</label><select name="category" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500"><option value="heritage">Heritage</option><option value="nature">Nature</option><option value="cultural">Cultural</option><option value="religious">Religious</option><option value="adventure">Adventure</option><option value="village_life">Village Life</option></select></div>
+              <div><label class="block text-sm font-medium mb-1.5">Location</label><input type="text" name="location" required placeholder="e.g. Nalanda, Bihar" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500"></div>
+            </div>
+            <div class="mb-4"><label class="block text-sm font-medium mb-1.5">Description</label><textarea name="description" rows="3" required placeholder="Describe this place - what makes it special..." class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"></textarea></div>
+            <div class="mb-4"><label class="block text-sm font-medium mb-1.5">Description (Hindi)</label><textarea name="descriptionHi" rows="2" placeholder="हिंदी में विवरण..." class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"></textarea></div>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+              <div><label class="block text-sm font-medium mb-1.5">Best Time to Visit</label><input type="text" name="bestTimeToVisit" placeholder="e.g. October to March" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500"></div>
+              <div><label class="block text-sm font-medium mb-1.5">State</label><select name="state" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500"><option value="Bihar">Bihar</option><option value="Haryana">Haryana</option><option value="Uttar Pradesh">Uttar Pradesh</option><option value="Punjab">Punjab</option><option value="Jharkhand">Jharkhand</option></select></div>
+            </div>
+            <div class="mb-6"><label class="block text-sm font-medium mb-1.5">Upload Images</label><input type="file" name="images" multiple accept="image/*" class="w-full border dark:border-zinc-600 rounded-xl px-4 py-3 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-teal-100 file:text-teal-700 file:font-medium file:text-sm"></div>
+            <div id="tourism-form-msg"></div>
+            <button type="submit" class="px-8 py-3 bg-teal-700 hover:bg-teal-800 text-white rounded-xl font-medium transition-colors">Submit Place</button>
+          </form>
+        </div>`;
+    }
+
+    async function submitTourism(e) {
+      e.preventDefault();
+      var form = new FormData(e.target);
+      var msgEl = document.getElementById('tourism-form-msg');
+      try {
+        var res = await fetch(API + '/tourism', {method:'POST', headers:{'Authorization':'Bearer '+token}, body:form});
+        var d = await res.json();
+        if (d.success) {
+          msgEl.innerHTML = '<div class="bg-green-50 border border-green-200 rounded-xl p-3 text-sm text-green-800 mb-4">Tourism place submitted successfully! It will be visible after approval.</div>';
+          e.target.reset();
+        } else {
+          msgEl.innerHTML = '<div class="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-800 mb-4">'+(d.error||'Failed to submit')+'</div>';
+        }
+      } catch(err) { msgEl.innerHTML = '<div class="bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-800 mb-4">Connection error</div>'; }
     }
 
     function filterSchemesHub() {
